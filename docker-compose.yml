@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  object-storage:
+    image: minio/minio
+    ports:
+      - '9000:9000'
+      - '3000:9001'
+    networks:
+      - appnetwork
+    restart: always
+    volumes:
+      - '$HOME/miniodata:/data'
+    environment:
+      - MINIO_ROOT_USER=root
+      - MINIO_ROOT_PASSWORD=12345678
+  db:
+    image: mysql:8.3
+    ports:
+      - '3306:3306'
+    networks:
+      - appnetwork
+    restart: always
+    volumes:
+      - '$HOME/mysqldata:/var/lib/mysql'
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345678
+      - MYSQL_DATABASE=my_app_db
+
+networks:
+  appnetwork:
+    driver: bridge
